@@ -1,7 +1,50 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>File Manipulation</title>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <h1>File Manipulation</h1>
+    <form id="fileForm">
+        <label for="mode">Mode (1 for Create, 2 for Get):</label>
+        <input type="number" id="mode" name="mode" min="1" max="2" required><br><br>
+        <label for="name">File Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="data">Base64 Data (for mode 1):</label>
+        <textarea id="data" name="data" rows="4" cols="50"></textarea><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById("fileForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const mode = document.getElementById("mode").value;
+            const name = document.getElementById("name").value;
+            const data = document.getElementById("data").value;
+
+            if (mode === '1') {
+                // Create file
+                createFile(name, data);
+            } else if (mode === '2') {
+                // Get file
+                getFile(name);
+            }
+        });
+
+        function createFile(name, data) {
+            // Perform file creation logic here
+            // For demonstration purposes, we'll just display the result
+            document.getElementById("result").textContent = `File created: ${name}`;
+        }
+
+        function getFile(name) {
+            // Perform file retrieval logic here
+            // For demonstration purposes, we'll just display the result
+            document.getElementById("result").textContent = `File retrieved: ${name}`;
+        }
+    </script>
 </body>
 </html>
