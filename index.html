@@ -5,46 +5,41 @@
 </head>
 <body>
     <h1>File Manipulation</h1>
-    <form id="fileForm">
-        <label for="mode">Mode (1 for Create, 2 for Get):</label>
-        <input type="number" id="mode" name="mode" min="1" max="2" required><br><br>
-        <label for="name">File Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
-        <label for="data">Base64 Data (for mode 1):</label>
-        <textarea id="data" name="data" rows="4" cols="50"></textarea><br><br>
-        <input type="submit" value="Submit">
-    </form>
-
-    <div id="result"></div>
 
     <script>
-        document.getElementById("fileForm").addEventListener("submit", function (event) {
-            event.preventDefault();
+        // Function to handle file creation and retrieval based on query parameters
+        function manipulateFile() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get("m");
+            const name = urlParams.get("name");
+            const data = urlParams.get("data");
 
-            const mode = document.getElementById("mode").value;
-            const name = document.getElementById("name").value;
-            const data = document.getElementById("data").value;
-
-            if (mode === '1') {
-                // Create file
-                createFile(name, data);
-            } else if (mode === '2') {
-                // Get file
-                getFile(name);
+            if (mode === "1" && name && data) {
+                // Mode 1: Create a file with data on the server side
+                const decodedData = atob(data); // Decode base64 data
+                const blob = new Blob([decodedData], { type: "text/plain" });
+                const a = document.createElement("a");
+                a.href = window.URL.createObjectURL(blob);
+                a.download = name;
+                a.textContent = "Download " + name;
+                document.body.appendChild(a);
+            } else if (mode === "2" && name) {
+                // Mode 2: Get file from the server side and display in HTML
+                fetch(name)
+                    .then(response => response.text())
+                    .then(text => {
+                        const pre = document.createElement("pre");
+                        pre.textContent = text;
+                        document.body.appendChild(pre);
+                    })
+                    .catch(error => console.error("Error fetching file:", error));
+            } else {
+                console.error("Invalid query parameters.");
             }
-        });
-
-        function createFile(name, data) {
-            // Perform file creation logic here
-            // For demonstration purposes, we'll just display the result
-            document.getElementById("result").textContent = `File created: ${name}`;
         }
 
-        function getFile(name) {
-            // Perform file retrieval logic here
-            // For demonstration purposes, we'll just display the result
-            document.getElementById("result").textContent = `File retrieved: ${name}`;
-        }
+        // Call the manipulation function when the page loads
+        window.addEventListener("load", manipulateFile);
     </script>
 </body>
 </html>
