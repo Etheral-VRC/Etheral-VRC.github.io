@@ -1,1 +1,51 @@
-<video src="https://github.com/Etheral-VRC/Etheral-VRC.github.io/blob/main/370750984_653059663446263_4638940581917729093_n.mov" controls="controls" style="max-width: 730px;"></video>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Discord Webhook Tester</title>
+  </head>
+  <body>
+    <script>
+      // Function to send a message to the Discord webhook
+      function sendToDiscord(username, content, webhook) {
+        // Construct the message payload in the format that Discord expects
+        const data = {
+          username: username,
+          content: content,
+        };
+
+        // Send the message to the Discord webhook
+        fetch(webhook, {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              console.log('Message sent successfully to Discord.');
+            } else {
+              console.error('Failed to send message to Discord.');
+            }
+          })
+          .catch((error) => {
+            console.error('Error sending message to Discord:', error);
+          });
+      }
+
+      // Get query parameters from the URL
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const username = urlParams.get('username');
+      const content = urlParams.get('content');
+      const webhook = urlParams.get('webhook');
+
+      if (username && content && webhook) {
+        // Send the message to Discord if all parameters are provided
+        sendToDiscord(username, content, webhook);
+      } else {
+        console.error('Missing required query parameters.');
+      }
+    </script>
+  </body>
+</html>
